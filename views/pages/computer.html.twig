@@ -1,0 +1,99 @@
+{% extends "../layouts/base.html.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/tailwind.css">
+{% endblock %}
+
+{% block title %}
+	<title>{{ title }}</title>
+{% endblock %}
+
+{% block main %}
+	<div class="min-h-screen bg-gradient-to-b from-gray-900  to-gray-950 via-purple-900">
+		<div
+			class="p-8 xl:ml-80">
+
+            <div class="relative w-full h-32 md:h-44 lg:h-56 bg-cover bg-center mb-6" style="background-image: url('https://static.vecteezy.com/ti/vecteur-libre/p1/26531308-ultra-violet-neon-laser-lignes-la-technologie-moderne-contexte-vectoriel.jpg');">
+				<div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+					<h2 class="text-white text-lg md:text-2xl lg:text-4xl font-bold text-center">
+						Gestion Employés
+					</h2>
+				</div>
+			</div>
+			<!-- Bouton pour ajouter un ordinateur -->
+			<button id="addComputerBtn" class="bg-purple-700 text-white p-4 rounded-lg shadow-lg hover:bg-purple-800 transition duration-300 ease-in-out transform hover:scale-110 mb-8">
+				Ajouter un ordinateur
+			</button>
+
+			<!-- Formulaire d'ajout d'ordinateur -->
+			<div id="addComputerForm" class="hidden bg-gray-950 p-3 rounded-xl shadow-2xl max-w-lg mx-auto transition-all duration-500 ease-in-out transform scale-95">
+				<h2 class="text-2xl font-bold text-white mb-4">Ajouter un nouvel ordinateur</h2>
+				<form action="/addcomputer" method="POST">
+					<div class="mb-3">
+						<label for="namePc" class="block text-lg font-medium text-gray-300">Nom de l'ordinateur</label>
+						<input type="text" name="namePc" id="namePc" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-gray-700 text-white">
+					</div>
+					<div class="mb-3">
+						<label for="nameMac" class="block text-lg font-medium text-gray-300">Adresse MAC</label>
+						<input type="text" name="nameMac" id="nameMac" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-gray-700 text-white">
+					</div>
+					<button type="submit" class="bg-purple-700 text-white p-4 rounded-md mt-4 hover:bg-purple-800 transition duration-300 ease-in-out transform hover:scale-110">Ajouter</button>
+				</form>
+			</div>
+
+			<!-- Liste des ordinateurs -->
+			<table class="min-w-full bg-gray-950 rounded-xl shadow-2xl text-white">
+				<thead>
+					<tr class="border-b border-gray-600">
+						<th class="px-6 py-5 text-lg text-left">Nom d'ordinateur</th>
+						<th class="px-6 py-5 text-lg text-left">Adresse MAC</th>
+						<th class="px-6 py-5 text-lg text-left">Disponibilité</th>
+						<th class="px-6 py-5 text-lg text-left">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% if computeurs|length > 0 %}
+						{% for computeur in computeurs %}
+							<tr class="border-b border-gray-400 hover:bg-purple-950 hover:shadow-lg">
+								<td class="px-6 py-4">{{ computeur.namePc }}</td>
+								<td class="px-6 py-4">{{ computeur.nameMac }}</td>
+								<td class="px-6 py-4">
+									{% if computeur.employe is empty %}
+										<span class="inline-block w-4 h-4 bg-green-500 rounded-full"></span>
+										Disponible
+									{% else %}
+										<span class="inline-block w-4 h-4 bg-red-500 rounded-full"></span>
+										Indisponible
+									{% endif %}
+								</td>
+
+								<td class="px-6 py-4 flex space-x-6">
+									<a href="/deletecomputer/{{ computeur.id }}" class="text-red-500 hover:text-red-700 text-lg">
+										Supprimer
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					{% else %}
+						<tr>
+							<td colspan="2" class="px-6 py-4 text-center text-gray-400">
+								Aucun ordinateur disponible.
+							</td>
+						</tr>
+					{% endif %}
+				</tbody>
+
+			</table>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block script %}
+	<script>
+		// Afficher le formulaire d'ajout d'ordinateur
+document.getElementById('addComputerBtn').addEventListener('click', function () {
+document.getElementById('addComputerForm').classList.toggle('hidden');
+});
+	</script>
+{% endblock %}

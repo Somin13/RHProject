@@ -1,0 +1,73 @@
+{% extends "../layouts/base.html.twig" %}
+
+{% block style %}
+
+	<link rel="stylesheet" href="/assets/css/tailwind.css">
+{% endblock %}
+
+{% block title %}
+	<title>{{ title }}</title>
+{% endblock %}
+
+{% block main %}
+	<div class="min-h-screen bg-gradient-to-b from-gray-900  to-gray-950 via-purple-900">
+		<div class="p-4 xl:ml-80">
+			<div class="relative w-full h-32 sm:h-40 md:h-52 lg:h-64 bg-cover bg-center"
+ style="background-image: url('https://static.vecteezy.com/ti/vecteur-libre/p1/26531308-ultra-violet-neon-laser-lignes-la-technologie-moderne-contexte-vectoriel.jpg');">
+
+				<!-- Overlay sombre pour le texte -->
+				<div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+					<h2 class="text-white text-2xl md:text-4xl font-bold text-center">Bienvenue
+						{{ user.lastName }}</h2>
+				</div>
+			</div>
+			<br>
+			<br>
+
+			<h1 class="text-white text-xl font-extrabold">Tableau de bord
+			</h1>
+			<br>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+				<div class="bg-gray-950 p-6 rounded-lg shadow-lg text-white">
+					<h3 class="text-lg font-semibold">Employés</h3>
+					<p class="text-3xl font-bold">{{ employees_count }}</p>
+					<p class="text-green-400 text-sm">{{ employees_count_last_month }}
+						→
+						{{ employees_count }}
+						(+5%) Depuis le mois dernier</p>
+				</div>
+				<div class="bg-gray-950 p-6 rounded-lg shadow-lg text-white">
+					<h3 class="text-lg font-semibold">Ordinateurs</h3>
+					<p class="text-3xl font-bold">{{ computers_count }}</p>
+					<p class="text-green-400 text-sm">{{ computers_count_last_month }}
+						→
+						{{ computers_count }}
+						(+3.4%) Depuis le mois dernier</p>
+				</div>
+
+				<hr class="my-6 border-white/50"/>
+
+				{% if birthdayEmployees is not empty %}
+					<div class="bg-yellow-500 text-black p-4 rounded-lg shadow-lg mt-4">
+						<h3 class="text-lg font-bold">🎉 Joyeux anniversaire ! 🎂</h3>
+						<p class="text-lg">
+							Nous souhaitons un excellent anniversaire à
+							{% for emp in birthdayEmployees %}
+								<span class="font-bold">{{ emp.name }}
+									{{ emp.lastName }}</span>
+								{% if not loop.last %},
+								{% endif %}
+							{% endfor %}
+							🎊🎁
+						</p>
+					</div>
+				{% endif %}
+				<br>
+			</div>
+			<iframe src="https://calendar.google.com/calendar/embed?src=fr.french%23holiday%40group.v.calendar.google.com&ctz=Europe%2FParis" class="w-full h-64 rounded-md" frameborder="0" scrolling="no"></iframe>
+
+		</div>
+	</div>
+
+{% endblock %}

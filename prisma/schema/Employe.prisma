@@ -1,0 +1,27 @@
+model Employe {
+    id Int @id @default(autoincrement())
+    name String
+    lastName String
+    email String @unique
+    password String
+    dateNaissance DateTime? 
+    genre Sexe?
+
+    role Role @default(EMPLOYE)
+
+    userId Int
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    computeurId Int? @unique
+    computeur Computeur? @relation(fields: [computeurId], references: [id])
+
+    photo String?
+}
+
+enum Sexe {
+    MASCULIN
+    FEMININ
+}
+
+SELECT * FROM EMPLOYE
+

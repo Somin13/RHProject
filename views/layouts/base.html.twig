@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% block title %}{% endblock %}
+
+        <link rel="stylesheet" href="/assets/css/tailwind.css">
+
+    {% block style %}{% endblock %}
+</head>
+<body class="bg-slate-500">
+    {% include "../partials/header.html.twig" %}
+    {% block main %}{% endblock %}
+    {% include "../partials/footer.html.twig" %}
+    {% block script %}{% endblock %}
+</body>
+</html>

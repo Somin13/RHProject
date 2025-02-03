@@ -1,0 +1,20 @@
+model User {
+    id Int @id @default(autoincrement())
+    raisonSocial String
+    siret String @unique
+    password String
+    name String?
+    lastName String?
+    profilPicture String?
+
+    // messages Message[]
+    employe Employe[]
+    computeur Computeur[]
+    role Role @default(USER)
+
+}
+
+enum Role {
+    USER 
+    EMPLOYE
+}

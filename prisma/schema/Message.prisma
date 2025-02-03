@@ -1,0 +1,10 @@
+// model Message {
+//     id          Int      @id @default(autoincrement())
+//     content     String
+//     senderId    Int
+//     receiverId  Int
+//     timestamp   DateTime @default(now())
+    
+//     sender      User     @relation("SentMessages", fields: [senderId], references: [id])
+//     receiver    Employe  @relation("ReceivedMessages", fields: [receiverId], references: [id])
+// }

@@ -1,0 +1,11 @@
+model Computeur {
+    id Int @id @default(autoincrement())
+    namePc String
+    nameMac String 
+    
+    userId Int?
+    user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    employe Employe?
+}
+

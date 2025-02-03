@@ -1,0 +1,276 @@
+{% extends "../layouts/base.html.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/tailwind.css">
+{% endblock %}
+
+{% block title %}
+	<title>{{ title }}</title>
+{% endblock %}
+
+{% block main %}
+
+	<div class="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 via-purple-900">
+		<div class="p-8 xl:ml-80">
+
+		<div class="relative w-full h-32 md:h-44 lg:h-56 bg-cover bg-center mb-6" style="background-image: url('https://static.vecteezy.com/ti/vecteur-libre/p1/26531308-ultra-violet-neon-laser-lignes-la-technologie-moderne-contexte-vectoriel.jpg');">
+				<div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+					<h2 class="text-white text-lg md:text-2xl lg:text-4xl font-bold text-center">
+						Gestion Employés
+					</h2>
+				</div>
+			</div>
+
+
+			<button id="addUserBtn" class="bg-purple-700 text-white p-4 rounded-lg shadow-lg hover:bg-purple-800 transition duration-300 ease-in-out transform hover:scale-110 mb-8">
+				Ajouter un employé
+			</button>
+
+			<div id="addUserForm" class="hidden bg-gray-950 p-3 rounded-xl shadow-2xl max-w-lg mx-auto transition-all duration-500 ease-in-out transform scale-95">
+				<h2 class="text-2xl font-bold text-white mb-4">Ajouter un nouvel employé</h2>
+				<form action="/addemploye" method="POST" enctype="multipart/form-data">
+					<div class="mb-3">
+						<label for="name" class="block text-lg font-medium text-gray-300">Nom</label>
+						<input type="text" name="name" id="name" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+					</div>
+					<div class="mb-3">
+						<label for="lastName" class="block text-lg font-medium text-gray-300">Prénom</label>
+						<input type="text" name="lastName" id="lastName" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+					</div>
+					<div class="mb-3">
+						<label for="email" class="block text-lg font-medium text-gray-300">Email</label>
+						<input type="email" name="email" id="email" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+					</div>
+					<div class="mb-3">
+						<label for="password" class="block text-lg font-medium text-gray-300">Mot de passe</label>
+						<input type="password" name="password" id="password" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+					</div>
+					<div class="mb-3">
+						<label for="dateNaissance" class="block text-lg font-medium text-gray-300">Date de naissance</label>
+						<input type="date" name="dateNaissance" id="dateNaissance" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+
+					</div>
+					<div class="mb-3">
+						<label for="genre" class="block text-lg font-medium text-gray-300">Genre</label>
+						<select name="genre" id="genre" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+							<option value="FEMININ">Féminin</option>
+							<option value="MASCULIN">Masculin</option>
+						</select>
+					</div>
+					<div class="mb-3">
+						<label for="photo" class="block text-lg font-medium text-gray-300">Photo de profil</label>
+						<input type="file" name="photo" id="photo" class="mt-2 block w-full text-gray-300">
+					</div>
+					<button type="submit" class="bg-purple-700 text-white p-4 rounded-md mt-4 hover:bg-purple-800 transition duration-300 ease-in-out transform hover:scale-110">Ajouter</button>
+				</form>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{% for emp in employe %}
+					<div class="bg-gray-950 p-6 rounded-xl shadow-lg transition transform hover:scale-105">
+						<div class="flex items-center gap-4">
+							<img src="{{ emp.photo ?: '/uploads/default-profile.png' }}" class="w-20 h-20 rounded-full" alt="Photo de {{ emp.name }}">
+							<div>
+								<h3 class="text-xl font-semibold text-white">{{ emp.name }}
+									{{ emp.lastName }}</h3>
+							</div>
+						</div>
+						<div class="mt-4 text-gray-300">
+							<p>Email :
+								{{ emp.email }}</p>
+							<p>Âge : {{ emp.age }}</p>
+
+
+							<p>Genre :
+								{{ emp.genre == 'MASCULIN' ? 'Masculin' : 'Féminin' }}</p>
+						</div>
+						<div class="mt-4 flex justify-between">
+							<button onclick="openEditForm('{{ emp.id }}')" class="text-purple-500 hover:text-purple-700">Modifier</button>
+							<a href="/deletemploye/{{ emp.id }}" class="text-red-500 hover:text-red-700">Supprimer</a>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div id="editUserForm" class="fixed inset-0 bg-gray-950 bg-opacity-50 flex justify-center items-center hidden">
+		<div class="bg-gray-800 p-5 rounded-xl max-w-lg w-full">
+			<h2 class="text-2xl font-bold text-white mb-4">Modifier l'employé</h2>
+			<form action="" method="POST" id="editForm" enctype="multipart/form-data">
+
+				<div class="mb-3">
+					<label for="editName" class="block text-lg font-medium text-gray-300">Nom</label>
+					<input type="text" name="name" id="editName" value="{{employe.name}}" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+				</div>
+				<div class="mb-3">
+					<label for="editLastName" class="block text-lg font-medium text-gray-300">Prénom</label>
+					<input type="text" name="lastName" id="editLastName" value="{{employe.lastName}}" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+				</div>
+				<div class="mb-3">
+					<label for="editEmail" class="block text-lg font-medium text-gray-300">Email</label>
+					<input type="text" name="email" id="editEmail" value="{{employe.email}}" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+				</div>
+				<div>
+
+					<label for="editDateNaissance" class="block text-lg font-medium text-gray-300">Date de naissance</label>
+					<input type="date" name="dateNaissance" id="editDateNaissance" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+
+				</div>
+
+				<div class="mb-3">
+					<label for="editGenre" class="block text-lg font-medium text-gray-300">Genre</label>
+					<select name="genre" id="editGenre" value="{{employe.genre}}" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+						<option value="FEMININ">Féminin</option>
+						<option value="MASCULIN">Masculin</option>
+					</select>
+				</div>
+				<div class="mb-3 flex items-center space-x-4">
+					<img id="previewImage" class="w-20 h-20 rounded-full" src="" alt="Photo de profil">
+					<input type="file" name="photo" id="editPhoto" class="mt-2 text-gray-300">
+				</div>
+				<button type="submit" class="bg-purple-700 text-white p-4 rounded-md mt-4 hover:bg-purple-800 transition duration-300 ease-in-out transform hover:scale-110">Enregistrer</button>
+			</form>
+			<button class="absolute top-2 right-2 text-white text-xl" onclick="closeEditForm()">X</button>
+		</div>
+	</div>
+
+	<!-- Liste des employés -->
+	{# <table class="min-w-full bg-gray-950 rounded-xl shadow-2xl text-white">
+
+
+		<thead>
+			<tr class="border-b border-gray-600">
+				<th class="px-6 py-5 text-lg text-left">Photo</th>
+				<th class="px-6 py-5 text-lg text-left">Nom</th>
+				<th class="px-6 py-5 text-lg text-left">Prénom</th>
+				<th class="px-6 py-5 text-lg text-left">Email</th>
+				<th class="px-6 py-5 text-lg text-left">Genre</th>
+				<th class="px-6 py-5 text-lg text-left">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for emp in employe %}
+				<tr class="border-b border-gray-700 hover:bg-gray-700 hover:shadow-lg">
+
+					<td class="px-6 py-4">
+						<img src="{{ emp.photo }}" class="w-12 h-12 rounded-full" alt="Photo de {{ emp.name }}">
+					</td>
+					<td class="px-6 py-4">{{ emp.name }}</td>
+					<td class="px-6 py-4">{{ emp.lastName }}</td>
+					<td class="px-6 py-4">{{ emp.email }}</td>
+					<td class="px-6 py-4">{{ emp.genre == 'MASCULIN' ? 'Masculin' : 'Féminin' }}</td>
+					<td class="px-6 py-4 flex space-x-6">
+						<p class="text-purple-500 hover:text-purple-700 text-lg" onclick="openEditForm('{{ emp.id }}')">
+							Modifier
+						</p>
+						<a href="/deletemploye/{{ emp.id }}" class="text-red-500 hover:text-red-700 text-lg">
+							Supprimer
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table> #}
+</div></div><!-- Modale de modification d'employé --><div id="editUserForm" class="fixed inset-0 bg-gray-950 bg-opacity-50 flex justify-center items-center hidden">
+<div class="bg-gray-800 p-5 rounded-xl max-w-lg w-full">
+	<h2 class="text-2xl font-bold text-white mb-4">Modifier l'employé</h2>
+	<form action="" method="POST" id="editForm">
+		<div class="mb-3">
+			<label for="editName" class="block text-lg font-medium text-gray-300">Nom</label>
+			<input type="text" name="name" id="editName" value="{{employe.name}}" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+		</div>
+		<div class="mb-3">
+			<label for="editLastName" class="block text-lg font-medium text-gray-300">Prénom</label>
+			<input type="text" name="lastName" id="editLastName" value="{{employe.lastName}}" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+		</div>
+		<div class="mb-3">
+			<label for="editEmail" class="block text-lg font-medium text-gray-300">Email</label>
+			<input type="text" name="email" id="editEmail" value="{{employe.email}}" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+		</div>
+
+		<div class="mb-3">
+			<label for="editGenre" class="block text-lg font-medium text-gray-300">Genre</label>
+			<select name="genre" id="editGenre" value="{{employe.genre}}" required class="mt-2 block w-full px-4 py-2 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 bg-gray-700 text-white">
+				<option value="FEMININ">Féminin</option>
+				<option value="MASCULIN">Masculin</option>
+			</select>
+		</div>
+		<div class="mb-3 flex items-center space-x-4">
+			<img id="previewImage" class="w-20 h-20 rounded-full" src="" alt="Photo de profil">
+			<input type="file" name="photo" id="editPhoto" class="mt-2 text-gray-300">
+		</div>
+		<button type="submit" class="bg-purple-700 text-white p-4 rounded-md mt-4 hover:bg-purple-800 transition duration-300 ease-in-out transform hover:scale-110">Enregistrer</button>
+	</form>
+	<button class="absolute top-2 right-2 text-white text-xl" onclick="closeEditForm()">X</button>
+</div></div>{% endblock %}{% block script %}<script>
+// Afficher le formulaire d'ajout
+document.getElementById('addUserBtn').addEventListener('click', function () {
+document.getElementById('addUserForm').classList.toggle('hidden');
+});
+
+document.getElementById('')
+
+async function openEditForm(userId) {
+const modal = document.getElementById('editUserForm');
+const form = document.getElementById('editForm');
+const employe = await getEmployeById(userId);
+
+// Remplir les champs avec les données existantes
+document.getElementById("editName").value = employe.name;
+document.getElementById("editLastName").value = employe.lastName;
+document.getElementById("editEmail").value = employe.email;
+document.getElementById("editDateNaissance").value = employe.dateNaissance ? employe.dateNaissance.split("T")[0] : "";
+document.getElementById("editGenre").value = employe.genre;
+
+// Mettre à jour l'aperçu de la photo
+document.getElementById("previewImage").src = employe.photo ? employe.photo : "/default-profile.png";
+
+// Mise à jour de l'action du formulaire
+form.action = "/editemploye/" + userId;
+
+modal.classList.remove('hidden');
+}
+
+// Fermer la modale de modification
+function closeEditForm() {
+document.getElementById('editUserForm').classList.add('hidden');
+}
+
+// Aperçu de l’image sélectionnée
+document.getElementById("editPhoto").addEventListener("change", function (event) {
+const file = event.target.files[0];
+if (file) {
+const reader = new FileReader();
+reader.onload = function (e) {
+document.getElementById("previewImage").src = e.target.result;
+};
+reader.readAsDataURL(file);
+}
+});
+
+// Fonction pour convertir la date de naissance en age
+function getAge(dateString) {
+    let birthDate = new Date(dateString);
+    let today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    let monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+
+
+// Fonction pour récupérer un employé par son ID
+async function getEmployeById(id) {
+const response = await fetch("/api/employees/" + id);
+const data = await response.json();
+return data;
+}
+
+</script>
+
+{% endblock %}
